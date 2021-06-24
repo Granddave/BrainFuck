@@ -1,22 +1,16 @@
-#include <iostream>
-
 #include "brainfuck.h"
 
-int main(int argc, char** argv)
+int main(int, char**)
 {
-    if (argc != 2) {
-        std::cerr << "Run with " << argv[0] << " <source file>\n";
-        return -1;
-    }
+    constexpr std::string_view code(R"(
+++       Cell c0 = 2
+> +++++  Cell c1 = 5
+[        Start your loops with your cell pointer on the loop counter (c1 in our case)
+< +      Add 1 to c0
+> -      Subtract 1 from c1
+]        End your loops with the cell pointer on the loop counter
+)");
+    constexpr BrainFuck bf(code);
 
-    auto code_or_error = BrainFuck::parse(argv[1]);
-    if (!code_or_error.has_value()) {
-        std::cerr << "Failed to parse\n";
-        return EXIT_FAILURE;
-    }
-
-    BrainFuck::Runner runner(code_or_error.value());
-    runner.run();
-
-    return EXIT_SUCCESS;
+    return bf.read_memory(0);
 }
