@@ -1,6 +1,9 @@
 # Brainfuck
 
-This repo contains a constexpr implementation of a Brainfuck interpreter.
+This repo contains
+
+- a constexpr Brainfuck interpreter.
+- a Brainfuck C transpiler.
 
 
 ## Build
