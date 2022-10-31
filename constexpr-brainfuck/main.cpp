@@ -1,4 +1,4 @@
-#include "brainfuck.h"
+#include "constexpr-brainfuck.h"
 
 int main(int, char**)
 {
