@@ -4,3 +4,4 @@ project(brainfuck LANGUAGES CXX)
 
 add_subdirectory(constexpr-brainfuck)
 add_subdirectory(brainfuck-c-transpiler)
+add_subdirectory(bfception)
