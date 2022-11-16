@@ -10,8 +10,23 @@ const static int INDENTATION_STEP = 4;
 class BrainFuck {
 public:
     BrainFuck(const std::string_view code)
-        : m_code(std::move(code))
     {
+        for (char c : code) {
+            switch (c) {
+            case '>':
+            case '<':
+            case '+':
+            case '-':
+            case '.':
+            case ',':
+            case '[':
+            case ']':
+                m_code.push_back(c);
+                break;
+            default:
+                continue;
+            }
+        }
     }
 
     std::string get_c_code()
@@ -25,6 +40,7 @@ public:
         indentation();
         m_result << "int memory[32768];\n";
 
+        int count = 1;
         while (m_pc < m_code.size()) {
             const char current_token = consume();
 
@@ -39,11 +55,21 @@ public:
                 break;
             case '+':
                 indentation();
-                m_result << "memory[" << m_ptr << "] += 1;\n";
+                count = 1;
+                if (peek() == '+') {
+                    consume();
+                    ++count;
+                }
+                m_result << "memory[" << m_ptr << "] += " << count << ";\n";
                 break;
             case '-':
                 indentation();
-                m_result << "memory[" << m_ptr << "] -= 1;\n";
+                count = 1;
+                if (peek() == '-') {
+                    consume();
+                    ++count;
+                }
+                m_result << "memory[" << m_ptr << "] -= " << count << ";\n";
                 break;
             case '.':
                 indentation();
@@ -79,6 +105,12 @@ private:
         return m_code[m_pc++];
     }
 
+    char peek()
+    {
+        assert(m_pc < m_code.size());
+        return m_code[m_pc];
+    }
+
     void indentation()
     {
         m_result << std::string(m_indentation * INDENTATION_STEP, ' ');
@@ -98,7 +130,7 @@ private:
     int m_indentation { 0 };
     std::size_t m_pc { 0 };
     std::size_t m_ptr { 0 };
-    std::string_view m_code;
+    std::string m_code;
     std::array<std::uint8_t, 32768> m_memory { 0 };
 };
 
