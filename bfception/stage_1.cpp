@@ -1,118 +1,51 @@
 #include <array>
 #include <cassert>
+#include <cstring>
 #include <iostream>
 #include <sstream>
+#include <stdint.h>
 #include <string>
 #include <string_view>
-#include <stdint.h>
-
+using namespace std;
 class BF {
 public:
-    BF(const std::string_view code)
+    BF(const string_view code) { for(char ch:code) if(strchr("><+-.,[]",ch)) c.push_back(ch); }
+    string get_c_code()
     {
-        for (char ch : code) {
-            switch (ch) {
-            case '>':
-            case '<':
-            case '+':
-            case '-':
-            case '.':
-            case ',':
-            case '[':
-            case ']':
-                c.push_back(ch);
-                break;
-            default:
-                continue;
+        pc=0;
+        r<<"#include \"stdio.h\"\n#define P putchar\n#define G getchar\n#define W while\nint main(){\nint m[32768];\n";
+        int n;
+        while(pc<c.size()){
+            char ct=c[pc++];
+            switch(ct){
+            case'>':++p;break;
+            case'<':--p;break;
+            case'+':n=1; while(c[pc]=='+') {pc++;++n;}r<<"m["<<p<<"]+="<<n<<";\n";break;
+            case'-':n=1; while(c[pc]=='-'){pc++;++n;}r<<"m["<<p<<"]-="<<n<<";\n";break;
+            case'.':r<<"P(m["<<p<<"]);\n";break;
+            case',':r<<"m["<<p<<"]=G();\n";break;
+            case'[':r<<"W(m["<<p<<"]!=0){\n";break;
+            case']':r<<"}\n";break;
+            default:continue;
             }
         }
-    }
-
-    std::string get_c_code()
-    {
-        assert(!c.empty());
-        pc = 0;
-
-        r << "#include \"stdio.h\"\n"
-          << "int main()\n{\n";
-        r << "int m[32768];\n";
-        r << "#define P putchar\n";
-        r << "#define G getchar\n";
-        r << "#define W while\n";
-
-        int count = 1;
-        while (pc < c.size()) {
-            const char current_token = consume();
-
-            switch (current_token) {
-            case '>':
-                assert(ptr + 1 < m.size());
-                ++ptr;
-                break;
-            case '<':
-                assert(ptr != 0);
-                --ptr;
-                break;
-            case '+':
-                count = 1;
-                while (peek() == '+') {
-                    consume();
-                    ++count;
-                }
-                r << "m[" << ptr << "] += " << count << ";\n";
-                break;
-            case '-':
-                count = 1;
-                while (peek() == '-') {
-                    consume();
-                    ++count;
-                }
-                r << "m[" << ptr << "] -= " << count << ";\n";
-                break;
-            case '.':
-                r << "P(m[" << ptr << "]);\n";
-                break;
-            case ',':
-                r << "m[" << ptr << "] = G();\n";
-                break;
-            case '[':
-                r << "W (m[" << ptr << "] != 0) {\n";
-                break;
-            case ']':
-                r << "}\n";
-                break;
-            default:
-                continue;
-            }
-        }
-        r << "}";
+        r<<"}";
         return r.str();
     }
 
 private:
-    char consume()
-    {
-        assert(pc < c.size());
-        return c[pc++];
-    }
-
-    char peek()
-    {
-        assert(pc < c.size());
-        return c[pc];
-    }
-    std::stringstream r;
-    std::size_t pc { 0 };
-    std::size_t ptr { 0 };
-    std::string c;
-    std::array<uint8_t, 32768> m { 0 };
+    stringstream r;
+    size_t pc{0};
+    size_t p{0};
+    string c;
+    array<uint8_t, 32768> m { 0 };
 };
 
 int main(int, char**)
 {
-    std::string code;
+    string s;
     // BF_HERE
-    BF bf(code);
-    std::cout << bf.get_c_code() << std::endl;
+    BF bf(s);
+    cout << bf.get_c_code() << endl;
     return 0;
 }
