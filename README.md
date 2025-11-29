@@ -34,7 +34,7 @@ $ build/brainfuck-c-transpiler/brainfuck-c-transpiler > main.c \
 
 A C++ program that when modified by a Python script is compiled and run, prints
 a C program that when compiled and run, prints a C++ program that when compiled
-and run, pruints a C program that when compiled and run, prints a C++ program
+and run, prints a C program that when compiled and run, prints a C++ program
 identical to the original C++ program.
 
 Full circle!
