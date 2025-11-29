@@ -1,13 +1,25 @@
 #!/usr/bin/env python3
 
+import argparse
+
 from text_to_brainfuck.brainfuck_generator import string_to_bf
 
 BF_CODE_WIDTH = 120
 
 
+def _parse_args():
+    parser = argparse.ArgumentParser("Generate Brainfuck code that prints C++ code")
+    parser.add_argument("input", type=str, help="Input C++ file to read")
+    parser.add_argument(
+        "--output", "-o", type=str, required=True, help="Output C++ file to write"
+    )
+    return parser.parse_args()
+
+
 def _main():
+    args = _parse_args()
     main_cpp = None
-    with open("step_1_main.cpp", "r") as fd:
+    with open(args.input, "r") as fd:
         main_cpp = fd.read()
     split_marker = "    // BF_HERE\n"
     part_1, part_2 = main_cpp.split(split_marker, maxsplit=1)
@@ -39,7 +51,7 @@ def _main():
         for y in range(BF_CODE_WIDTH, len(main_stage_2) + BF_CODE_WIDTH, BF_CODE_WIDTH)
     ]
 
-    with open("step_2_main.cpp", "w") as fd:
+    with open(args.output, "w") as fd:
         fd.write(part_1)
         for bf_line in bf_results:
             fd.write(format_code_string(bf_line))

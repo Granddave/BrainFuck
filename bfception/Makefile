@@ -1,33 +1,33 @@
-CFLAGS := -O0 -Wall -Wextra -Werror -std=c11
-CXXFLAGS := -O0 -Wall -Wextra -Werror -std=c++11
+CFLAGS := -std=c11
+CXXFLAGS := -std=c++20
 
-all: step_9_main.cpp
+all: stage_6.cpp
 
-step_2_main.cpp: step_1_main.cpp generate_brainfuck_code.py
-	time ./generate_brainfuck_code.py
+stage_2.cpp: stage_1.cpp generate_brainfuck_code.py
+	time ./generate_brainfuck_code.py stage_1.cpp -o stage_2.cpp
 
-step_3_generated.c: step_2_main.cpp
-	time g++ $(CXXFLAGS) step_2_main.cpp -o step_3
-	time ./step_3 > step_3_generated.c
+stage_3.c: stage_2.cpp
+	time g++ $(CXXFLAGS) stage_2.cpp -o stage_2
+	time ./stage_2 > stage_3.c
 
-step_5_main.cpp: step_3_generated.c
-	time gcc $(CFLAGS) step_3_generated.c -o step_4
-	time ./step_4 > step_5_main.cpp
+stage_4.cpp: stage_3.c
+	time gcc $(CFLAGS) stage_3.c -o stage_3
+	time ./stage_3 > stage_4.cpp
 
-step_7.c: step_5_main.cpp
-	time g++ $(CXXFLAGS) step_5_main.cpp -o step_6
-	time ./step_6 > step_7.c
+stage_5.c: stage_4.cpp
+	time g++ $(CXXFLAGS) stage_4.cpp -o stage_4
+	time ./stage_4 > stage_5.c
 
-step_9_main.cpp: step_7.c
-	time gcc $(CFLAGS) step_7.c -o step_8
-	time ./step_8 > step_9_main.cpp
-	diff step_1_main.cpp step_9_main.cpp && echo The same!
+stage_6.cpp: stage_5.c
+	time gcc $(CFLAGS) stage_5.c -o stage_5
+	time ./stage_5 > stage_6.cpp
+	diff stage_1.cpp stage_6.cpp && echo The same!
 
 clean:
-	rm -f step_2_main.cpp
-	rm -f step_3 step_3_generated.c
-	rm -f step_4 step_5_main.cpp
-	rm -f step_6 step_7.c
-	rm -f step_8 step_9_main.cpp
+	rm -f stage_2.cpp stage_2
+	rm -f stage_3.c stage_3
+	rm -f stage_4.cpp stage_4
+	rm -f stage_5.c stage_5
+	rm -f stage_6.cpp
 
 .PHONY: all clean
