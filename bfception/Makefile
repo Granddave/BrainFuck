@@ -4,23 +4,23 @@ CXXFLAGS := -std=c++20
 all: stage_6.cpp
 
 stage_2.cpp: stage_1.cpp generate_stage_2.py
-	time ./generate_stage_2.py stage_1.cpp -o stage_2.cpp
+	./generate_stage_2.py stage_1.cpp -o stage_2.cpp
 
 stage_3.c: stage_2.cpp
-	time g++ $(CXXFLAGS) stage_2.cpp -o stage_2
-	time ./stage_2 > stage_3.c
+	g++ $(CXXFLAGS) stage_2.cpp -o stage_2
+	./stage_2 > stage_3.c
 
 stage_4.cpp: stage_3.c
-	time gcc $(CFLAGS) stage_3.c -o stage_3
-	time ./stage_3 > stage_4.cpp
+	gcc $(CFLAGS) stage_3.c -o stage_3
+	./stage_3 > stage_4.cpp
 
 stage_5.c: stage_4.cpp
-	time g++ $(CXXFLAGS) stage_4.cpp -o stage_4
-	time ./stage_4 > stage_5.c
+	g++ $(CXXFLAGS) stage_4.cpp -o stage_4
+	./stage_4 > stage_5.c
 
 stage_6.cpp: stage_5.c
-	time gcc $(CFLAGS) stage_5.c -o stage_5
-	time ./stage_5 > stage_6.cpp
+	gcc $(CFLAGS) stage_5.c -o stage_5
+	./stage_5 > stage_6.cpp
 	diff stage_1.cpp stage_6.cpp && echo The same!
 
 clean:

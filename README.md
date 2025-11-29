@@ -32,7 +32,25 @@ $ build/brainfuck-c-transpiler/brainfuck-c-transpiler > main.c \
 
 ## Brainfuckception (bfception)
 
-A C++ program containing a brainfuck program which is transpiled to C code and printed.
-This C program is compiled to an application that when run prints out the code for the original C++ file.
+A C++ program that when modified by a Python script is compiled and run, prints
+a C program that when compiled and run, prints a C++ program that when compiled
+and run, pruints a C program that when compiled and run, prints a C++ program
+identical to the original C++ program.
 
-Not in a working state.
+Full circle!
+
+```sh
+$ cd bfception
+$ make
+./generate_stage_2.py stage_1.cpp -o stage_2.cpp
+g++ -std=c++20 stage_2.cpp -o stage_2
+./stage_2 > stage_3.c
+gcc -std=c11 stage_3.c -o stage_3
+./stage_3 > stage_4.cpp
+g++ -std=c++20 stage_4.cpp -o stage_4
+./stage_4 > stage_5.c
+gcc -std=c11 stage_5.c -o stage_5
+./stage_5 > stage_6.cpp
+diff stage_1.cpp stage_6.cpp && echo The same!
+The same!
+```

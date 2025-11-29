@@ -33,7 +33,7 @@ def _parse_args():
 def _main():
     args = _parse_args()
     stage_1 = args.input.read_text()
-    part_1, part_2 = stage_1.split("// BF_HERE\n", maxsplit=1)
+    part_1, part_2 = stage_1.split("// BF_CODE\n", maxsplit=1)
 
     stage_1_bf = _str_to_bf(stage_1)
     stage_1_bf_c_str = _to_c_str_lines(stage_1_bf)
