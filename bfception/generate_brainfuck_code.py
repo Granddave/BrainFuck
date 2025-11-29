@@ -2,57 +2,48 @@
 
 from text_to_brainfuck.brainfuck_generator import string_to_bf
 
-SEPARATOR = "[-]>[-]>[-]>[-]>[[[[[-]>]>]>]>]<<<"
-BF_LEN = 80
+BF_CODE_WIDTH = 120
 
 
 def _main():
-    bf_result = ""
+    main_cpp = None
+    with open("step_1_main.cpp", "r") as fd:
+        main_cpp = fd.read()
+    split_marker = "    // BF_HERE\n"
+    part_1, part_2 = main_cpp.split(split_marker, maxsplit=1)
 
-    part_1_content = None
-    with open("step_1_main_1.cpp", "r") as fd:
-        part_1_content = "".join(fd.readlines())
-    part_2_content = None
-    with open("step_1_main_2.cpp", "r") as fd:
-        part_2_content = "".join(fd.readlines())
+    # This is now Brainfuck code that prints the C++ code
+    part_1_bf = string_to_bf(part_1, False)
+    split_marker_bf = string_to_bf(split_marker, False)
+    part_2_bf = string_to_bf(part_2, False)
 
-    # split into parts
-    # part_1_splitted = [part_1_content[y-BF_LEN:y] for y in range(BF_LEN, len(part_1_content)+BF_LEN,BF_LEN)]
-    # part_1_splitted = [part_1_content]
-    # convert to bf
-    # for p in part_1_splitted:
-    #    # append together with SEPARATOR in between
-    #    bf_result += string_to_bf(p, False)
-    #    bf_result += SEPARATOR
-
-    part_1_bf = string_to_bf(part_1_content, False)
-    part_2_bf = string_to_bf(part_2_content, False)
-    mid = part_1_bf + part_2_bf
+    # `mid` is what we want BF to print out in the end
+    mid = part_1_bf + split_marker_bf + part_2_bf
     mid_bf_lines = [
-        mid[y - BF_LEN : y] for y in range(BF_LEN, len(mid) + BF_LEN, BF_LEN)
+        mid[y - BF_CODE_WIDTH : y]
+        for y in range(BF_CODE_WIDTH, len(mid) + BF_CODE_WIDTH, BF_CODE_WIDTH)
     ]
 
     def format_code_string(s):
         return f'    code += "{s}";\n'
 
+    # Now add this brainfuck code as many lines of C++ code
     mid_bf = ""
     for bf_line in mid_bf_lines:
         mid_bf += format_code_string(bf_line)
     mid_bf_bf = string_to_bf(mid_bf, False)
 
-    bf_result += part_1_bf
-    bf_result += mid_bf_bf
-    bf_result += part_2_bf
+    main_stage_2 = part_1_bf + mid_bf_bf + part_2_bf
     bf_results = [
-        bf_result[y - BF_LEN : y]
-        for y in range(BF_LEN, len(bf_result) + BF_LEN, BF_LEN)
+        main_stage_2[y - BF_CODE_WIDTH : y]
+        for y in range(BF_CODE_WIDTH, len(main_stage_2) + BF_CODE_WIDTH, BF_CODE_WIDTH)
     ]
 
     with open("step_2_main.cpp", "w") as fd:
-        fd.write(part_1_content)
+        fd.write(part_1)
         for bf_line in bf_results:
             fd.write(format_code_string(bf_line))
-        fd.write(part_2_content)
+        fd.write(part_2)
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 set -x
@@ -19,3 +19,9 @@ time gcc -O3 step_3_generated.c -o build/step_4_bfception
 echo "Generating C++ code from transpiled C code"
 build/step_4_bfception > step_5_main.cpp
 echo "done"
+time g++ step_5_main.cpp -o step_6
+time ./step_6 > step_7.c
+time gcc step_7.c -o step_8
+time ./step_8 > step_9_main.cpp
+
+diff step_1_main.cpp step_9_main.cpp

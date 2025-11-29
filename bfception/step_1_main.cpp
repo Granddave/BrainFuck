@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include <string_view>
+#include <stdint.h>
 
 const static int INDENTATION_STEP = 4;
 
@@ -131,9 +132,14 @@ private:
     std::size_t m_pc { 0 };
     std::size_t m_ptr { 0 };
     std::string m_code;
-    std::array<std::uint8_t, 32768> m_memory { 0 };
+    std::array<uint8_t, 32768> m_memory { 0 };
 };
 
 int main(int, char**)
 {
     std::string code;
+    // BF_HERE
+    BrainFuck bf(code);
+    std::cout << bf.get_c_code() << std::endl;
+    return 0;
+}
