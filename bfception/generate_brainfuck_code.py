@@ -21,7 +21,7 @@ def _main():
     main_cpp = None
     with open(args.input, "r") as fd:
         main_cpp = fd.read()
-    split_marker = "    // BF_HERE\n"
+    split_marker = "// BF_HERE\n"
     part_1, part_2 = main_cpp.split(split_marker, maxsplit=1)
 
     # This is now Brainfuck code that prints the C++ code
@@ -37,7 +37,7 @@ def _main():
     ]
 
     def format_code_string(s):
-        return f'    code += "{s}";\n'
+        return f's+="{s}";\n'
 
     # Now add this brainfuck code as many lines of C++ code
     mid_bf = ""
