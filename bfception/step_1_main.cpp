@@ -6,14 +6,12 @@
 #include <string_view>
 #include <stdint.h>
 
-const static int INDENTATION_STEP = 4;
-
-class BrainFuck {
+class BF {
 public:
-    BrainFuck(const std::string_view code)
+    BF(const std::string_view code)
     {
-        for (char c : code) {
-            switch (c) {
+        for (char ch : code) {
+            switch (ch) {
             case '>':
             case '<':
             case '+':
@@ -22,7 +20,7 @@ public:
             case ',':
             case '[':
             case ']':
-                m_code.push_back(c);
+                c.push_back(ch);
                 break;
             default:
                 continue;
@@ -32,114 +30,89 @@ public:
 
     std::string get_c_code()
     {
-        assert(!m_code.empty());
-        m_pc = 0;
+        assert(!c.empty());
+        pc = 0;
 
-        m_result << "#include \"stdio.h\"\n"
-                 << "int main()\n{\n";
-        indent();
-        indentation();
-        m_result << "int memory[32768];\n";
+        r << "#include \"stdio.h\"\n"
+          << "int main()\n{\n";
+        r << "int m[32768];\n";
+        r << "#define P putchar\n";
+        r << "#define G getchar\n";
+        r << "#define W while\n";
 
         int count = 1;
-        while (m_pc < m_code.size()) {
+        while (pc < c.size()) {
             const char current_token = consume();
 
             switch (current_token) {
             case '>':
-                assert(m_ptr + 1 < m_memory.size());
-                ++m_ptr;
+                assert(ptr + 1 < m.size());
+                ++ptr;
                 break;
             case '<':
-                assert(m_ptr != 0);
-                --m_ptr;
+                assert(ptr != 0);
+                --ptr;
                 break;
             case '+':
-                indentation();
                 count = 1;
                 if (peek() == '+') {
                     consume();
                     ++count;
                 }
-                m_result << "memory[" << m_ptr << "] += " << count << ";\n";
+                r << "m[" << ptr << "] += " << count << ";\n";
                 break;
             case '-':
-                indentation();
                 count = 1;
                 if (peek() == '-') {
                     consume();
                     ++count;
                 }
-                m_result << "memory[" << m_ptr << "] -= " << count << ";\n";
+                r << "m[" << ptr << "] -= " << count << ";\n";
                 break;
             case '.':
-                indentation();
-                m_result << "putchar(memory[" << m_ptr << "]);\n";
+                r << "P(m[" << ptr << "]);\n";
                 break;
             case ',':
-                indentation();
-                m_result << "memory[" << m_ptr << "] = getchar();\n";
+                r << "m[" << ptr << "] = G();\n";
                 break;
             case '[':
-                indentation();
-                m_result << "while (memory[" << m_ptr << "] != 0) {\n";
-                indent();
+                r << "W (m[" << ptr << "] != 0) {\n";
                 break;
             case ']':
-                unindent();
-                indentation();
-                m_result << "}\n";
+                r << "}\n";
                 break;
             default:
                 continue;
             }
         }
-        unindent();
-        m_result << "}";
-        return m_result.str();
+        r << "}";
+        return r.str();
     }
 
 private:
     char consume()
     {
-        assert(m_pc < m_code.size());
-        return m_code[m_pc++];
+        assert(pc < c.size());
+        return c[pc++];
     }
 
     char peek()
     {
-        assert(m_pc < m_code.size());
-        return m_code[m_pc];
+        assert(pc < c.size());
+        return c[pc];
     }
-
-    void indentation()
-    {
-        m_result << std::string(m_indentation * INDENTATION_STEP, ' ');
-    }
-
-    void indent()
-    {
-        ++m_indentation;
-    }
-
-    void unindent()
-    {
-        --m_indentation;
-    }
-
-    std::stringstream m_result;
-    int m_indentation { 0 };
-    std::size_t m_pc { 0 };
-    std::size_t m_ptr { 0 };
-    std::string m_code;
-    std::array<uint8_t, 32768> m_memory { 0 };
+    std::stringstream r;
+    std::size_t pc { 0 };
+    std::size_t ptr { 0 };
+    std::string c;
+    std::array<uint8_t, 32768> m { 0 };
 };
 
 int main(int, char**)
 {
     std::string code;
     // BF_HERE
-    BrainFuck bf(code);
+    BF bf(code);
     std::cout << bf.get_c_code() << std::endl;
     return 0;
 }
