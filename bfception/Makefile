@@ -3,8 +3,8 @@ CXXFLAGS := -std=c++20
 
 all: stage_6.cpp
 
-stage_2.cpp: stage_1.cpp generate_brainfuck_code.py
-	time ./generate_brainfuck_code.py stage_1.cpp -o stage_2.cpp
+stage_2.cpp: stage_1.cpp generate_stage_2.py
+	time ./generate_stage_2.py stage_1.cpp -o stage_2.cpp
 
 stage_3.c: stage_2.cpp
 	time g++ $(CXXFLAGS) stage_2.cpp -o stage_2
