@@ -16,9 +16,27 @@ $ cmake .. && make
 
 ## Constexpr interpreter
 
-A class that takes a `constexpr std::string_view` and let's the user read a memory element with just
-a few CPU instructions in runtime. I/O does not work for obvious reasons.
+A class that takes a `constexpr std::string_view` and let's the user read a
+memory element with literally zero runtime cost.
+I/O does not work for obvious reasons.
 
+Try out on [Godbolt.org](https://godbolt.org/z/bYj5o68de)
+
+```bash
+$ cd constexpr-brainfuck/
+$ make
+g++ -std=c++20 -O1 main.cpp -o constexpr_bf
+$ ./constexpr_bf
+$ echo $?
+7
+# Only 0x7 is returned from main, no other instructions:
+$ objdump -d --disassemble=main constexpr_bf
+...
+0000000000401106 <main>:
+  401106:       b8 07 00 00 00          mov    $0x7,%eax
+  40110b:       c3                      ret
+...
+```
 
 ## Transpiler
 
