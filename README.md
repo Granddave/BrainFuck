@@ -32,10 +32,11 @@ $ build/brainfuck-c-transpiler/brainfuck-c-transpiler > main.c \
 
 ## Brainfuckception (bfception)
 
-A C++ program that when modified by a Python script is compiled and run, prints
-a C program that when compiled and run, prints a C++ program that when compiled
-and run, prints a C program that when compiled and run, prints a C++ program
-identical to the original C++ program.
+- A C++ program that when modified by a Python script is compiled and run,
+- prints a Brainfuck transpiler in C that when compiled and run,
+- prints a C++ program that when compiled and run,
+- prints a Brainfuck transpiler in C that when compiled and run,
+- prints a C++ program identical to the original C++ program.
 
 Full circle!
 
