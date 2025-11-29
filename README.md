@@ -54,3 +54,5 @@ gcc -std=c11 stage_5.c -o stage_5
 diff stage_1.cpp stage_6.cpp && echo The same!
 The same!
 ```
+
+[Brainfuckception](brainfuck.svg)
