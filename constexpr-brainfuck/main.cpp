@@ -2,6 +2,7 @@
 #include <cassert>
 #include <iostream>
 #include <string_view>
+#include <stdint.h>
 
 class BrainFuck {
 public:
@@ -11,7 +12,7 @@ public:
         run();
     }
 
-    constexpr std::uint8_t read_memory(const size_t pos) const
+    constexpr uint8_t read_memory(const size_t pos) const
     {
         return m_memory.at(pos);
     }
@@ -103,7 +104,7 @@ private:
     std::size_t m_pc { 0 };
     std::size_t m_ptr { 0 };
     std::string_view m_code;
-    std::array<std::uint8_t, 32768> m_memory { 0 };
+    std::array<uint8_t, 32768> m_memory { 0 };
 };
 
 int main(int, char**)
