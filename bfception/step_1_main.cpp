@@ -55,7 +55,7 @@ public:
                 break;
             case '+':
                 count = 1;
-                if (peek() == '+') {
+                while (peek() == '+') {
                     consume();
                     ++count;
                 }
@@ -63,7 +63,7 @@ public:
                 break;
             case '-':
                 count = 1;
-                if (peek() == '-') {
+                while (peek() == '-') {
                     consume();
                     ++count;
                 }
