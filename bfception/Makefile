@@ -7,19 +7,19 @@ stage_2.cpp: stage_1.cpp generate_stage_2.py
 	./generate_stage_2.py stage_1.cpp -o stage_2.cpp
 
 stage_3.c: stage_2.cpp
-	g++ $(CXXFLAGS) stage_2.cpp -o stage_2
+	$(CXX) $(CXXFLAGS) stage_2.cpp -o stage_2
 	./stage_2 > stage_3.c
 
 stage_4.cpp: stage_3.c
-	gcc $(CFLAGS) stage_3.c -o stage_3
+	$(CC) $(CFLAGS) stage_3.c -o stage_3
 	./stage_3 > stage_4.cpp
 
 stage_5.c: stage_4.cpp
-	g++ $(CXXFLAGS) stage_4.cpp -o stage_4
+	$(CXX) $(CXXFLAGS) stage_4.cpp -o stage_4
 	./stage_4 > stage_5.c
 
 stage_6.cpp: stage_5.c
-	gcc $(CFLAGS) stage_5.c -o stage_5
+	$(CC) $(CFLAGS) stage_5.c -o stage_5
 	./stage_5 > stage_6.cpp
 	diff stage_1.cpp stage_6.cpp && echo The same!
 
