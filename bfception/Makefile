@@ -21,6 +21,8 @@ stage_5.c: stage_4.cpp
 stage_6.cpp: stage_5.c
 	$(CC) $(CFLAGS) stage_5.c -o stage_5
 	./stage_5 > stage_6.cpp
+
+check: stage_6.cpp
 	diff stage_1.cpp stage_6.cpp && echo The same!
 
 clean:
@@ -30,4 +32,4 @@ clean:
 	rm -f stage_5.c stage_5
 	rm -f stage_6.cpp
 
-.PHONY: all clean
+.PHONY: all clean check

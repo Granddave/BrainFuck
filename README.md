@@ -70,6 +70,7 @@ g++ -std=c++20 stage_4.cpp -o stage_4
 ./stage_4 > stage_5.c
 cc -std=c11 stage_5.c -o stage_5
 ./stage_5 > stage_6.cpp
+$ make check
 diff stage_1.cpp stage_6.cpp && echo The same!
 The same!
 ```
