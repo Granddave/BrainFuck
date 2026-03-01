@@ -6,20 +6,28 @@ all: stage_6.cpp
 stage_2.cpp: stage_1.cpp generate_stage_2.py
 	./generate_stage_2.py stage_1.cpp -o stage_2.cpp
 
-stage_3.c: stage_2.cpp
+stage_2: stage_2.cpp
 	$(CXX) $(CXXFLAGS) stage_2.cpp -o stage_2
+
+stage_3.c: stage_2
 	./stage_2 > stage_3.c
 
-stage_4.cpp: stage_3.c
+stage_3: stage_3.c
 	$(CC) $(CFLAGS) stage_3.c -o stage_3
+
+stage_4.cpp: stage_3
 	./stage_3 > stage_4.cpp
 
-stage_5.c: stage_4.cpp
+stage_4: stage_4.cpp
 	$(CXX) $(CXXFLAGS) stage_4.cpp -o stage_4
+
+stage_5.c: stage_4
 	./stage_4 > stage_5.c
 
-stage_6.cpp: stage_5.c
+stage_5: stage_5.c
 	$(CC) $(CFLAGS) stage_5.c -o stage_5
+
+stage_6.cpp: stage_5
 	./stage_5 > stage_6.cpp
 
 check: stage_6.cpp
