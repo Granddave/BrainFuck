@@ -41,3 +41,4 @@ clean:
 	rm -f stage_6.cpp
 
 .PHONY: all clean check
+.DELETE_ON_ERROR:
